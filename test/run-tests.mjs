@@ -1,0 +1,15 @@
+await import("./scan-range-utils.test.mjs");
+await import("./validation.test.mjs");
+await import("./styles.test.mjs");
+await import("./pair-builder.test.mjs");
+await import("./scan-engine.test.mjs");
+await import("./decoration-builder.test.mjs");
+await import("./tag-delete.test.mjs");
+await import("./tag-range-split.test.mjs");
+await import("./invalid-tag-cleanup.test.mjs");
+await import("./mobile-paragraph-selection.test.mjs");
+await import("./preview-post-processor.test.mjs");
+await import("./remove-tags.test.mjs");
+await import("./remove-horizontal-line.test.mjs");
+await import("./apply-variant.test.mjs");
+await import("./settings-controller.test.mjs");
