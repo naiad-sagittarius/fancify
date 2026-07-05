@@ -151,4 +151,4 @@ Fancify works offline and processes note content locally in Obsidian. The plugin
 
 ## License
 
-This project is licensed under the `0-BSD` license.
+This project is licensed under the `MIT` license.
