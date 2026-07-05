@@ -1,48 +1,87 @@
 # Fancify
 
-Fancify is an Obsidian plugin for creating custom formatting tools. You define tools, create variants with CSS properties, and apply those variants to selected text or blocks from the command palette.
-
-The plugin works locally in your vault. It does not use external services or send content from your notes.
+Fancify is an Obsidian plugin that allows you to create custom formatting tools. You can define tools and create variants with CSS properties, which you can then apply to selected text or blocks using the command palette.
 
 ## Features
 
-- Create custom tools for inline formatting, block formatting, and line elements
-- Add variants for each tool, name them, and use them as Obsidian commands
-- Tag selected text or complete block ranges and render them in Live Preview and Reading View
-- Insert horizontal lines from a command
-- Remove existing Fancify formatting from a selection, either selectively or completely
-- Manage tools and variants from the plugin settings
+- Create custom tools for inline and block formatting in the plugin settings
+- Add variants for each tool, name and use them as Obsidian commands
+- Format selected text or complete block ranges
+- Insert horizontal and vertical lines
+- Styling visible in Live Preview and Reading View
+- Remove existing formatting from a selection either selectively or completely
 
 ## Tool types
 
-Fancify currently supports these tool types:
+Fancify supports theese tool types:
 
-- `inline`: formats selected text inside a line, for example text color, background color, font size, or font style.
-- `block`: formats whole Markdown blocks, for example paragraphs, lists, headings, callouts, or table cells.
-- `element`: creates line elements. New element tools are currently created as vertical lines; horizontal lines are supported as their own style type.
+### `inline`
+-> for CSS inline styles
 
-Available properties depend on the tool type. Supported properties include color, background color, font family, font size, font weight, text alignment, borders, outlines, spacing, and line properties.
+- color
+- background-color
+- font-family
+- font-size
+- font-weight
+- font-style
+- vertical-align
+- text-decoration
+- border-radius
+- outline-color
+- outline-style
+- outline-width
+- outline-offset
+
+### `block`
+-> for CSS block styles (automatically selects whole Markdown elements such as paragraphs)
+
+- color
+- background-color
+- font-family
+- font-size
+- font-weight
+- font-style
+- text-align
+- text-decoration
+- padding (including: -right, -left, -top, -bottom)
+- margin (including: -right, -left, -top, -bottom)
+- border-color (including: -right, -left, -top, -bottom)
+- border-style (including: -right, -left, -top, -bottom)
+- border-width (including: -right, -left, -top, -bottom)
+- border-radius
+- outline-color
+- outline-style
+- outline-width
+- outline-offset
+
+### `element`
+-> for adding custom vertical and horizontal lines
+
+- line color
+- line thickness
+- line style
+- line radius
 
 ## Usage
 
 1. Open **Settings -> Community plugins -> Fancify**.
 2. Select **Create tool** and choose a tool type.
-3. Choose the style properties this tool should control.
+3. Choose the style properties this tool should adjust.
 4. Create one or more variants and assign values to them.
 5. Select text or blocks in a note.
 6. Run the matching Fancify command from the command palette.
 
-Each variant is registered as its own Obsidian command. The command name either comes from the variant's `commandName` field or is built from the tool name and variant name.
+Each variant is registered as its own Obsidian command. Fancify automatically generates the command name from the tool variant name. To change the command name, simply rename it in the "Set custom command name" field in the variant's settings.
 
 ## Removing formatting
 
-Fancify registers fixed commands for removing existing formatting:
+Select formatted text and run one of the following commands:
 
-- **Remove all styles** removes all Fancify tag pairs in the current selection.
-- **Remove selected style...** asks for a specific formatting style and removes only that style.
-- **Remove next horizontal line** removes the next horizontal Fancify line in the editor.
+- **Remove all styles**: Removes all Fancify styles from the current selection (inline styles are split, whereas block styles are removed entirely)
+- **Remove selected style...**: Shows all applied variants and removes only the selected style
+- **Remove next horizontal line**: Removes the next horizontal Fancify line in the editor (they can also be removed by clicking on them)
 
-Matching remove actions also appear in the editor context menu when removable Fancify styles are detected in the selection.
+Matching remove actions also appear in the editor context menu when styles are detected in the selection.
 
 ## Markdown syntax
 
@@ -79,24 +118,19 @@ Requirements:
 - Node.js 18 or newer
 - npm
 
-Install dependencies:
+Install dependencies (as usual):
 
 ```bash
 npm install
 ```
 
-Start development mode with watch builds:
-
 ```bash
 npm run dev
 ```
 
-Create a production build:
-
 ```bash
 npm run build
 ```
-
 Run tests:
 
 ```bash
@@ -112,9 +146,8 @@ Fancify works offline and processes note content locally in Obsidian. The plugin
 ## Notes and limitations
 
 - Fancify tags are part of the Markdown text. When sharing notes without the plugin installed, those tags remain visible.
-- Code blocks, inline code, table content in ignored areas, math, Mermaid, and similar special areas are intentionally skipped or handled conservatively during rendering.
-- A large number of nested or overlapping styles can make the Markdown source harder to read.
-- The plugin is not marked as desktop-only in the manifest and can generally be loaded on mobile. Mobile workflows should be checked carefully for selection behavior and performance.
+- Code blocks, inline code, table content, math, Mermaid, and similar special areas are intentionally skipped during rendering.
+- The plugin can generally be loaded on mobile.
 
 ## License
 
