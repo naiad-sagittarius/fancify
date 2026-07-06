@@ -118,7 +118,7 @@ Requirements:
 - Node.js 18 or newer
 - npm
 
-Install dependencies (as usual):
+Installation (as usual):
 
 ```bash
 npm install
