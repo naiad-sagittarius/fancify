@@ -15,7 +15,7 @@ Fancify is an Obsidian plugin that allows you to create custom formatting tools.
 
 Fancify supports theese tool types:
 
-### `inline`
+### inline
 -> for CSS inline styles
 
 - color
@@ -32,7 +32,7 @@ Fancify supports theese tool types:
 - outline-width
 - outline-offset
 
-### `block`
+### block
 -> for CSS block styles (automatically selects whole Markdown elements such as paragraphs)
 
 - color
@@ -54,7 +54,7 @@ Fancify supports theese tool types:
 - outline-width
 - outline-offset
 
-### `element`
+### element
 -> for adding custom vertical and horizontal lines
 
 - line color
@@ -73,15 +73,17 @@ Fancify supports theese tool types:
 
 Each variant is registered as its own Obsidian command. Fancify automatically generates the command name from the tool variant name. To change the command name, simply rename it in the "Set custom command name" field in the variant's settings.
 
-## Removing formatting
+Below the tool list on the settings page, you can also export or import your tools and variants.
+
+## Remove formatting
 
 Select formatted text and run one of the following commands:
 
 - **Remove all styles**: Removes all Fancify styles from the current selection (inline styles are split, whereas block styles are removed entirely)
 - **Remove selected style...**: Shows all applied variants and removes only the selected style
-- **Remove next horizontal line**: Removes the next horizontal Fancify line in the editor (they can also be removed by clicking on them)
+- **Remove next horizontal line**: Removes the next horizontal Fancify line in the editor (Alternatively, click on the line to remove it)
 
-Matching remove actions also appear in the editor context menu when styles are detected in the selection.
+Remove actions also appear in the editor context menu when styles are detected in the selection.
 
 ## Markdown syntax
 
@@ -90,10 +92,10 @@ Fancify stores formatting as short tag pairs directly in Markdown. The plugin de
 The basic principle looks like this:
 
 ```md
-{{...}}formatted text{{...}}
+{{aaaaaa}}formatted text{{aaaaaa}}
 ```
 
-The concrete tag values are generated automatically. They should not be edited manually because they encode the tool, variant, and pair assignment.
+The concrete tag values are generated automatically using alphanumeric characters. The first two characters represent the tool, the next two represent the variant, and the final two are the identification key for each tag pair. They should not be edited manually because they encode the tool, variant, and pair assignment.
 
 ## Installation
 
@@ -122,15 +124,12 @@ Installation (as usual):
 
 ```bash
 npm install
-```
 
-```bash
 npm run dev
-```
 
-```bash
 npm run build
 ```
+
 Run tests:
 
 ```bash
@@ -145,7 +144,9 @@ Fancify works offline and processes note content locally in Obsidian. The plugin
 
 ## Notes and limitations
 
-- Fancify tags are part of the Markdown text. When sharing notes without the plugin installed, those tags remain visible.
+- Fancify tags are part of the Markdown text. When exporting or opening notes without the plugin installed, those tags become visible.
+- Furthermore, tags are counted as a new word, which can lead to additional words.
+- Each tag pair uses exactly six alphanumeric characters, leading to a limited amount of tools, variants and usage per document. Currently, the limit for tools, variants per tool and usage per variant per document are each 3,844. The overall variant limit is 14,776,336, which I personally thought of as enough :).
 - Code blocks, inline code, table content, math, Mermaid, and similar special areas are intentionally skipped during rendering.
 - The plugin can generally be loaded on mobile.
 
