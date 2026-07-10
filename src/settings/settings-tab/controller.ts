@@ -2,6 +2,16 @@ import type { Validation } from "../../validation";
 import type Fancify from "../../main";
 import type { SettingsChange } from "../../main";
 import { showNotice } from "../../commands/notices";
+import {
+	createBackupExport,
+	createPresetExport,
+	stringifyExport,
+} from "../import-export/export";
+import {
+	appendPresetImport,
+	parseFancifyImport,
+} from "../import-export/import";
+import { backupFormat, presetFormat } from "../import-export/types";
 import { isPropertyStyleType } from "../../styles/properties";
 import type { StyleField, StyleType } from "../../styles/types";
 import {
@@ -76,6 +86,9 @@ function createControllerApi(api: {
 	moveVariant(variant: Variant, targetIndex: number): Promise<void>;
 	addToolProperty(tool: Tool, property: string): void;
 	removeToolProperty(tool: Tool, property: string): void;
+	createBackupExportText(): Promise<string | null>;
+	createPresetExportText(): Promise<string | null>;
+	importExportText(text: string): Promise<boolean>;
 }) {
 	return api;
 }
@@ -823,6 +836,80 @@ export function createSettingsController(
 		refreshView();
 	}
 
+	async function createBackupExportText(): Promise<string | null> {
+		if (!(await commitCurrentPage({ refreshOnError: true }))) {
+			return null;
+		}
+
+		return stringifyExport(
+			createBackupExport(
+				plugin.settings,
+				plugin.manifest.version,
+			),
+		);
+	}
+
+	async function createPresetExportText(): Promise<string | null> {
+		if (!(await commitCurrentPage({ refreshOnError: true }))) {
+			return null;
+		}
+
+		return stringifyExport(
+			createPresetExport(
+				plugin.settings,
+				plugin.manifest.version,
+			),
+		);
+	}
+
+	async function importExportText(text: string): Promise<boolean> {
+		if (!(await commitCurrentPage({ refreshOnError: true }))) {
+			return false;
+		}
+
+		const parsed = parseFancifyImport(text);
+		if (!parsed.valid) {
+			showNotice(parsed.message);
+			return false;
+		}
+
+		if (parsed.value.format === backupFormat) {
+			plugin.settings = parsed.value.settings;
+			state.page = "main";
+			state.selectedPageId = null;
+			state.pageError = null;
+			state.toolDrafts.clear();
+			state.variantDrafts.clear();
+			await saveSettingsAndRefresh(["settings-replaced"]);
+			showNotice("Fancify backup imported");
+			return true;
+		}
+
+		if (parsed.value.format === presetFormat) {
+			const result = appendPresetImport(plugin.settings, parsed.value);
+			if (!result.valid) {
+				showNotice(result.message);
+				return false;
+			}
+
+			state.page = "main";
+			state.selectedPageId = null;
+			state.pageError = null;
+			state.toolDrafts.clear();
+			state.variantDrafts.clear();
+			await saveSettingsAndRefresh(["settings-replaced"]);
+			showNotice(
+				result.value === 1
+					? "Fancify preset imported"
+					: `${result.value} Fancify presets imported`,
+			);
+			return true;
+		}
+
+		showNotice("Import file is not supported");
+		return false;
+	}
+
 	return createControllerApi({
 		toolDraft,
 		variantDraft,
@@ -841,6 +928,9 @@ export function createSettingsController(
 		moveVariant,
 		addToolProperty,
 		removeToolProperty,
+		createBackupExportText,
+		createPresetExportText,
+		importExportText,
 	});
 }
 

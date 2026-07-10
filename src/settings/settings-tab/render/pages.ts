@@ -1,6 +1,7 @@
 import type { SettingsTabRenderContext } from "../types";
 import { ToolTypePickerModal } from "../tool-type-picker-modal";
 import { renderToolListItem } from "./tool-section";
+import { renderImportExportSection } from "./import-export-section";
 import { renderSectionListPanel } from "./section-list";
 import type { ListDragState } from "./list-item-actions";
 import type { Tool } from "../../../tools/types";
@@ -50,4 +51,6 @@ export function renderMainPage(
 			}
 		},
 	});
+
+	renderImportExportSection(tab, container);
 }

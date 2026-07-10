@@ -13,3 +13,4 @@ await import("./remove-tags.test.mjs");
 await import("./remove-horizontal-line.test.mjs");
 await import("./apply-variant.test.mjs");
 await import("./settings-controller.test.mjs");
+await import("./import-export.test.mjs");

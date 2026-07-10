@@ -233,6 +233,7 @@ body.is-phone .fancify-tool-type-modal-container.fancify-tool-type-modal-no-clos
 .fancify-variant-editor,
 .fancify-field-block {
 	gap: var(--fancify-main-field-gap);
+	margin-top: 12px;
 }
 
 .fancify-page-header {
@@ -540,7 +541,8 @@ body.is-phone .fancify-tool-type-modal-container.fancify-tool-type-modal-no-clos
 	gap: 12px;
 }
 
-.fancify-section-list-title {
+.fancify-section-list-title,
+.fancify-import-export-title {
 	font-family: var(--h3-font, inherit);
 	font-size: var(--h3-size, 1.3rem);
 	font-weight: var(--h3-weight, 600);
@@ -556,6 +558,45 @@ body.is-phone .fancify-tool-type-modal-container.fancify-tool-type-modal-no-clos
 	border-top: 0;
 	padding: 4px 14px 14px;
 	background: var(--fancify-section-row-bg);
+}
+
+.fancify-import-export-panel {
+	display: flex;
+	flex-direction: column;
+	border-radius: 14px;
+	background: var(--fancify-section-row-bg);
+	overflow: hidden;
+}
+
+.fancify-import-export-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	min-height: 64px;
+	padding: 12px 16px;
+	gap: 12px;
+	box-sizing: border-box;
+	background: var(--fancify-section-row-bg);
+}
+
+.fancify-import-export-row + .fancify-import-export-row {
+	border-top: 1px solid var(--background-modifier-border);
+}
+
+.fancify-import-export-actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+.fancify-import-export-actions button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 124px;
+	text-align: center;
 }
 
 .fancify-section-list .fancify-empty-state {
