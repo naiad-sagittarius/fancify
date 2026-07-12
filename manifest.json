@@ -1,7 +1,7 @@
 {
 	"id": "fancify",
 	"name": "Fancify",
-	"version": "1.0.1",
+	"version": "1.0.0",
 	"minAppVersion": "1.7.2",
 	"description": "Create custom tools in order to apply CSS on selected text.",
 	"author": "Sagittarius",
