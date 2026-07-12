@@ -2,6 +2,10 @@
 
 Fancify is an Obsidian plugin that allows you to create custom formatting tools. You can define tools and create variants with CSS properties, which you can then apply to selected text or blocks using the command palette.
 
+## Screenshots
+
+![fancify-example](images/fancify-example.png)
+
 ## Features
 
 - Create custom tools for inline and block formatting in the plugin settings
