@@ -12,7 +12,8 @@ Fancify is an Obsidian plugin that allows you to create custom formatting tools.
 
 ## Features
 
-- Create custom tools for inline and block formatting in the plugin settings
+- Easily create styling tools in the plugin settings
+- No coding experience necessary 
 - Add variants for each tool, name and use them as Obsidian commands
 - Format selected text or complete block ranges
 - Insert horizontal and vertical lines
@@ -157,6 +158,7 @@ Fancify works offline and processes note content locally in Obsidian. The plugin
 - Each tag pair uses exactly six alphanumeric characters, leading to a limited amount of tools, variants and usage per document. Currently, the limit for tools, variants per tool and usage per variant per document are each 3,844. The overall variant limit is 14,776,336, which I personally thought of as enough :).
 - Code blocks, inline code, table content, math, Mermaid, and similar special areas are intentionally skipped during rendering.
 - The plugin can generally be loaded on mobile.
+- For more intuitive access to the styles, use "Note Toolbar" and simply add Fancify commands to your custom toolbars.
 
 ## License
 
