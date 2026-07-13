@@ -2,16 +2,12 @@ import { Plugin } from "obsidian";
 import type { Extension } from "@codemirror/state";
 
 import { createFancifyViewPlugin } from "./editor/decorations/view-plugin";
-import { createMobileParagraphSelectionExtension } from "./editor/mobile-paragraph-selection";
 import {
 	clearTagPrefixLookup,
 	rebuildTagPrefixLookup,
 } from "./editor/decorations/tag-scanner";
 
-import {
-	applyStyleTokens,
-	clearStyleTokens,
-} from "./styles/dom";
+import { applyStyleTokens, clearStyleTokens } from "./styles/dom";
 import { registerDynamicCommands } from "./commands/register-dynamic-commands";
 import { registerStaticCommands } from "./commands/register-static-commands";
 import {
@@ -62,9 +58,7 @@ export default class Fancify extends Plugin {
 	async saveSettings(changes?: Iterable<SettingsChange>) {
 		await this.saveData(this.settings);
 		await this.syncRuntime(
-			changes
-				? createRuntimeSyncOptions(changes)
-				: allRuntimeSyncOptions,
+			changes ? createRuntimeSyncOptions(changes) : allRuntimeSyncOptions,
 		);
 	}
 
@@ -113,7 +107,6 @@ export default class Fancify extends Plugin {
 			0,
 			this.editorExtensions.length,
 			createFancifyViewPlugin(),
-			createMobileParagraphSelectionExtension(),
 		);
 	}
 

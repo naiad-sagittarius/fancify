@@ -13,13 +13,12 @@ function downloadTextFile(fileName: string, text: string): void {
 
 	linkEl.href = url;
 	linkEl.download = fileName;
-	linkEl.style.display = "none";
+
 	document.body.appendChild(linkEl);
 	linkEl.click();
 	linkEl.remove();
-	window.setTimeout(() => {
-		URL.revokeObjectURL(url);
-	}, 0);
+
+	setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 function createActionButton(
@@ -27,15 +26,7 @@ function createActionButton(
 	label: string,
 	onClick: () => void | Promise<void>,
 ): void {
-	new ButtonComponent(container)
-		.setButtonText(label)
-		.onClick(async () => {
-			await onClick();
-		});
-}
-
-function readImportFile(file: File): Promise<string> {
-	return file.text();
+	new ButtonComponent(container).setButtonText(label).onClick(onClick);
 }
 
 function openImportPicker(tab: SettingsTabRenderContext): void {
@@ -52,7 +43,7 @@ function openImportPicker(tab: SettingsTabRenderContext): void {
 			}
 
 			try {
-				await tab.controller.importExportText(await readImportFile(file));
+				await tab.controller.importExportText(await file.text());
 			} catch (error) {
 				console.error("Failed to import Fancify export.", error);
 				showNotice("Failed to import Fancify export");
@@ -69,13 +60,16 @@ export function renderImportExportSection(
 	container: HTMLElement,
 ): void {
 	const panelEl = container.createDiv("fancify-import-export-panel");
+
 	const exportRowEl = panelEl.createDiv("fancify-import-export-row");
 	exportRowEl.createDiv({
 		cls: "fancify-import-export-title",
 		text: "Export",
 	});
 
-	const exportActionsEl = exportRowEl.createDiv("fancify-import-export-actions");
+	const exportActionsEl = exportRowEl.createDiv(
+		"fancify-import-export-actions",
+	);
 
 	createActionButton(exportActionsEl, "Export preset", async () => {
 		const text = await tab.controller.createPresetExportText();
@@ -101,7 +95,9 @@ export function renderImportExportSection(
 		text: "Import",
 	});
 
-	const importActionsEl = importRowEl.createDiv("fancify-import-export-actions");
+	const importActionsEl = importRowEl.createDiv(
+		"fancify-import-export-actions",
+	);
 
 	createActionButton(importActionsEl, "Import", () => {
 		openImportPicker(tab);
