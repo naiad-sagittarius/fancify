@@ -34,7 +34,7 @@ function getColorParserContext(): CanvasRenderingContext2D | null {
 		return colorParserContext;
 	}
 
-	const canvas = document.createElement("canvas");
+	const canvas = activeDocument.createElement("canvas");
 	canvas.width = 1;
 	canvas.height = 1;
 	colorParserContext = canvas.getContext("2d");
@@ -123,7 +123,9 @@ function hexToRgb(hex: string): RgbColor {
 
 function rgbToHex(rgb: RgbColor): string {
 	return `#${[rgb.r, rgb.g, rgb.b]
-		.map((channel) => clamp(Math.round(channel), 0, 255).toString(16).padStart(2, "0"))
+		.map((channel) =>
+			clamp(Math.round(channel), 0, 255).toString(16).padStart(2, "0"),
+		)
 		.join("")}`;
 }
 
@@ -235,7 +237,10 @@ export class CustomColorPicker {
 
 	private readonly anchorEl: HTMLElement;
 	private readonly anchorPreviewEl: HTMLElement | null;
-	private readonly onChange: (value: string, format: ColorOutputFormat) => void;
+	private readonly onChange: (
+		value: string,
+		format: ColorOutputFormat,
+	) => void;
 	private abortController: AbortController | null = null;
 	private dragAbortController: AbortController | null = null;
 	private format: ColorOutputFormat;
@@ -256,7 +261,8 @@ export class CustomColorPicker {
 		this.anchorPreviewEl = options.anchorPreviewEl ?? null;
 		this.onChange = options.onChange;
 		this.format = options.initialFormat;
-		const initialHex = getPickerHexValue(options.initialValue) ?? defaultHexColor;
+		const initialHex =
+			getPickerHexValue(options.initialValue) ?? defaultHexColor;
 		this.selectedHsv = rgbToHsv(hexToRgb(initialHex));
 		this.syncAnchorPreview();
 		this.anchorEl.addEventListener("click", () => {
@@ -364,7 +370,8 @@ export class CustomColorPicker {
 		const anchorRect = this.anchorEl.getBoundingClientRect();
 		const popoverRect = this.popoverEl.getBoundingClientRect();
 		const popoverHeight = popoverRect.height;
-		const availableBelow = window.innerHeight - anchorRect.bottom - viewportPadding;
+		const availableBelow =
+			window.innerHeight - anchorRect.bottom - viewportPadding;
 		const availableAbove = anchorRect.top - viewportPadding;
 		const shouldOpenAbove =
 			availableBelow < popoverHeight && availableAbove > availableBelow;
@@ -385,7 +392,7 @@ export class CustomColorPicker {
 	}
 
 	private registerGlobalListeners(signal: AbortSignal): void {
-		document.addEventListener(
+		activeDocument.addEventListener(
 			"pointerdown",
 			(event) => {
 				const target = event.target;
@@ -404,7 +411,7 @@ export class CustomColorPicker {
 			},
 			{ capture: true, signal },
 		);
-		document.addEventListener(
+		activeDocument.addEventListener(
 			"keydown",
 			(event) => {
 				if (event.key === "Escape") {
@@ -413,7 +420,9 @@ export class CustomColorPicker {
 			},
 			{ signal },
 		);
-		window.addEventListener("resize", () => this.positionPopover(), { signal });
+		window.addEventListener("resize", () => this.positionPopover(), {
+			signal,
+		});
 		window.addEventListener("scroll", () => this.positionPopover(), {
 			capture: true,
 			signal,
@@ -421,7 +430,9 @@ export class CustomColorPicker {
 	}
 
 	private renderPopover(): void {
-		const popoverEl = document.body.createDiv("fancify-custom-color-popover");
+		const popoverEl = activeDocument.body.createDiv(
+			"fancify-custom-color-popover",
+		);
 		popoverEl.style.width = `${popoverWidth}px`;
 		this.popoverEl = popoverEl;
 
@@ -437,7 +448,9 @@ export class CustomColorPicker {
 			},
 		});
 		this.hueSliderEl = hueSliderEl;
-		this.hueThumbEl = hueSliderEl.createDiv("fancify-custom-color-hue-thumb");
+		this.hueThumbEl = hueSliderEl.createDiv(
+			"fancify-custom-color-hue-thumb",
+		);
 		hueSliderEl.addEventListener("pointerdown", (event) => {
 			event.preventDefault();
 			this.startHueDrag(event);
@@ -455,7 +468,9 @@ export class CustomColorPicker {
 			},
 		});
 		this.saturationValueEl = saturationValueEl;
-		this.pointerEl = saturationValueEl.createDiv("fancify-custom-color-sv-pointer");
+		this.pointerEl = saturationValueEl.createDiv(
+			"fancify-custom-color-sv-pointer",
+		);
 		saturationValueEl.addEventListener("pointerdown", (event) => {
 			event.preventDefault();
 			this.startSaturationValueDrag(event);
@@ -482,7 +497,10 @@ export class CustomColorPicker {
 				"aria-pressed": "false",
 				type: "button",
 			},
-			cls: ["fancify-custom-color-format-button", "fancify-center-content"],
+			cls: [
+				"fancify-custom-color-format-button",
+				"fancify-center-content",
+			],
 		});
 		buttonEl.addEventListener("click", () => {
 			this.format = format;
@@ -545,14 +563,14 @@ export class CustomColorPicker {
 		trySetPointerCapture(this.hueSliderEl, event.pointerId);
 		this.scheduleHueUpdate(event.clientX);
 
-		document.addEventListener(
+		activeDocument.addEventListener(
 			"pointermove",
 			(pointerEvent) => {
 				this.scheduleHueUpdate(pointerEvent.clientX);
 			},
 			{ signal: this.dragAbortController.signal },
 		);
-		document.addEventListener(
+		activeDocument.addEventListener(
 			"pointerup",
 			() => {
 				this.abortDrag();
@@ -567,7 +585,7 @@ export class CustomColorPicker {
 		trySetPointerCapture(this.saturationValueEl, event.pointerId);
 		this.scheduleSaturationValueUpdate(event.clientX, event.clientY);
 
-		document.addEventListener(
+		activeDocument.addEventListener(
 			"pointermove",
 			(pointerEvent) => {
 				this.scheduleSaturationValueUpdate(
@@ -577,7 +595,7 @@ export class CustomColorPicker {
 			},
 			{ signal: this.dragAbortController.signal },
 		);
-		document.addEventListener(
+		activeDocument.addEventListener(
 			"pointerup",
 			() => {
 				this.abortDrag();
@@ -681,7 +699,8 @@ export class CustomColorPicker {
 					return;
 				}
 
-				const isActive = buttonEl.textContent?.toLowerCase() === this.format;
+				const isActive =
+					buttonEl.textContent?.toLowerCase() === this.format;
 				buttonEl.toggleClass("is-active", isActive);
 				buttonEl.setAttr("aria-pressed", `${isActive}`);
 			});

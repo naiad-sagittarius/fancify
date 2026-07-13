@@ -6,18 +6,14 @@ import {
 	lineStyleProperty,
 	lineThicknessProperty,
 } from "../line/constants";
-import {
-	isLineStyleType,
-	type StyleToken,
-	type StyleType,
-} from "./types";
+import { isLineStyleType, type StyleToken, type StyleType } from "./types";
 import { buildStyleTokenClass, buildStyleTokenVariableName } from "./tokens";
 import { isStyleTokenVariableName } from "./helpers";
 
 const tokenStyleElementId = "fancify-token-rules";
 
 function getDocument(target: HTMLElement): Document {
-	return target.ownerDocument ?? document;
+	return target.ownerDocument ?? activeDocument;
 }
 
 export function applyStyleTokens(
@@ -129,7 +125,7 @@ function buildLineStyleCssRules(
 			`.${className} { ` +
 				"--fancify-line-horizontal-image: none; " +
 				"--fancify-line-vertical-image: none;" +
-			"}",
+				"}",
 		];
 	}
 
@@ -144,7 +140,7 @@ function buildLineStyleCssRules(
 				`--fancify-line-vertical-image: repeating-linear-gradient(to bottom, ${color} 0 calc(${thickness} * 4), transparent calc(${thickness} * 4) calc(${thickness} * 6)); ` +
 				"--fancify-line-horizontal-background-size: 100% 100%; " +
 				"--fancify-line-vertical-background-size: 100% 100%;" +
-			"}",
+				"}",
 		];
 	}
 
@@ -154,7 +150,7 @@ function buildLineStyleCssRules(
 			`--fancify-line-vertical-image: radial-gradient(circle closest-side, ${color} 98%, transparent 100%); ` +
 			`--fancify-line-horizontal-background-size: calc(${thickness} * 3) ${thickness}; ` +
 			`--fancify-line-vertical-background-size: ${thickness} calc(${thickness} * 3);` +
-		"}",
+			"}",
 	];
 }
 

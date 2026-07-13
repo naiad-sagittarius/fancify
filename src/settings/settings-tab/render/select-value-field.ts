@@ -58,13 +58,16 @@ function getHighlightedIndex(
 	options: SelectOption[],
 	selectedValue: string,
 ): number {
-	const optionIndex = options.findIndex((option) => option.value === selectedValue);
+	const optionIndex = options.findIndex(
+		(option) => option.value === selectedValue,
+	);
 	return optionIndex >= 0 ? optionIndex : 0;
 }
 
-function getSettingsBounds(
-	controlEl: HTMLElement,
-): { top: number; bottom: number } {
+function getSettingsBounds(controlEl: HTMLElement): {
+	top: number;
+	bottom: number;
+} {
 	const settingsEl = controlEl.closest(".fancify-settings");
 	const settingsRect = settingsEl?.getBoundingClientRect();
 
@@ -97,14 +100,9 @@ export function renderSelectValueField(params: {
 	triggerEl.type = "button";
 	triggerEl.setAttribute("aria-haspopup", "listbox");
 
-	const triggerValueEl = triggerEl.createSpan(
-		"fancify-select-trigger-value",
-	);
+	const triggerValueEl = triggerEl.createSpan("fancify-select-trigger-value");
 	const menuEl = controlEl.createDiv({
-		cls: [
-			"fancify-property-menu",
-			"is-hidden",
-		],
+		cls: ["fancify-property-menu", "is-hidden"],
 	});
 	menuEl.setAttribute("role", "listbox");
 
@@ -150,7 +148,8 @@ export function renderSelectValueField(params: {
 			controlRect.top - bounds.top - menuGap,
 		);
 		const shouldOpenAbove =
-			availableBelow < minimumFlipHeight && availableAbove > availableBelow;
+			availableBelow < minimumFlipHeight &&
+			availableAbove > availableBelow;
 		const availableHeight = shouldOpenAbove
 			? availableAbove
 			: availableBelow;
@@ -189,10 +188,7 @@ export function renderSelectValueField(params: {
 			defaultValue,
 			getLabel,
 		);
-		highlightedIndex = getHighlightedIndex(
-			optionValues,
-			currentValue,
-		);
+		highlightedIndex = getHighlightedIndex(optionValues, currentValue);
 		menuEl.empty();
 
 		for (const [index, option] of optionValues.entries()) {
@@ -303,7 +299,7 @@ export function renderSelectValueField(params: {
 
 	controlEl.addEventListener("focusout", () => {
 		window.setTimeout(() => {
-			if (controlEl.contains(document.activeElement)) {
+			if (controlEl.contains(activeDocument.activeElement)) {
 				return;
 			}
 

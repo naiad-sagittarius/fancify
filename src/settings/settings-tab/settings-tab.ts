@@ -6,15 +6,9 @@ import {
 } from "./controller";
 import { locateTool, locateVariant } from "./lookup";
 import { renderToolDetailPage } from "./render/tool-section";
-import {
-	renderPageError,
-	renderMainPage,
-} from "./render/pages";
+import { renderPageError, renderMainPage } from "./render/pages";
 import { renderVariantDetailPage } from "./render/variant-section";
-import {
-	createSettingsViewState,
-	type SettingsViewState,
-} from "./view-state";
+import { createSettingsViewState, type SettingsViewState } from "./view-state";
 import type { SettingsTabRenderContext } from "./types";
 
 export class FancifySettingTab
@@ -57,10 +51,7 @@ export class FancifySettingTab
 
 		let selectedToolLocation =
 			this.state.page === "tool" && this.state.selectedPageId
-				? locateTool(
-						tools,
-						this.state.selectedPageId,
-					)
+				? locateTool(tools, this.state.selectedPageId)
 				: undefined;
 		let selectedVariantLocation =
 			this.state.page === "variant" && this.state.selectedPageId
@@ -95,11 +86,7 @@ export class FancifySettingTab
 		}
 
 		if (this.state.page === "tool" && selectedToolLocation) {
-			renderToolDetailPage(
-				this,
-				pageEl,
-				selectedToolLocation.tool,
-			);
+			renderToolDetailPage(this, pageEl, selectedToolLocation.tool);
 			return;
 		}
 
@@ -116,7 +103,7 @@ export class FancifySettingTab
 
 	private registerOutsideAutosave(): void {
 		this.unregisterOutsideAutosave();
-		const doc = this.containerEl.ownerDocument ?? document;
+		const doc = this.containerEl.ownerDocument ?? activeDocument;
 		this.outsideAutosaveAbortController = new AbortController();
 
 		doc.addEventListener(

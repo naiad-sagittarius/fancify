@@ -168,7 +168,7 @@ export function intersectRanges<T extends ScanRange>(
 			const from = Math.max(sourceRange.from, clipRange.from);
 			const to = Math.min(sourceRange.to, clipRange.to);
 			if (from < to) {
-				result.push({ ...sourceRange, from, to } as T);
+				result.push({ ...sourceRange, from, to });
 			}
 
 			if (clipRange.to >= sourceRange.to) {

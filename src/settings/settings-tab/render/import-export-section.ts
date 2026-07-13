@@ -9,12 +9,12 @@ function getDateStamp(): string {
 function downloadTextFile(fileName: string, text: string): void {
 	const blob = new Blob([text], { type: "application/json" });
 	const url = URL.createObjectURL(blob);
-	const linkEl = document.createElement("a");
+	const linkEl = activeDocument.createElement("a");
 
 	linkEl.href = url;
 	linkEl.download = fileName;
 
-	document.body.appendChild(linkEl);
+	activeDocument.body.appendChild(linkEl);
 	linkEl.click();
 	linkEl.remove();
 
@@ -30,7 +30,7 @@ function createActionButton(
 }
 
 function openImportPicker(tab: SettingsTabRenderContext): void {
-	const inputEl = document.createElement("input");
+	const inputEl = activeDocument.createElement("input");
 	inputEl.type = "file";
 	inputEl.accept = ".json,application/json";
 

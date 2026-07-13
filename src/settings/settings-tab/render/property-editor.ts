@@ -26,13 +26,7 @@ export function renderPropertyEditor(
 	);
 
 	if (availablePropertyIds.length > 0) {
-		renderPropertySearch(
-			tab,
-			wrapperEl,
-			tool,
-			draft,
-			availablePropertyIds,
-		);
+		renderPropertySearch(tab, wrapperEl, tool, draft, availablePropertyIds);
 	} else {
 		draft.propertyMenuOpen = false;
 		draft.propertySearch = "";
@@ -211,7 +205,7 @@ function renderPropertySearch(
 
 		menuAbortController = new AbortController();
 		const { signal } = menuAbortController;
-		document.addEventListener(
+		activeDocument.addEventListener(
 			"pointerdown",
 			(event) => {
 				const target = event.target;

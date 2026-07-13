@@ -99,7 +99,7 @@ export default class Fancify extends Plugin {
 	}
 
 	private applyTokens() {
-		applyStyleTokens(document.documentElement, this.settings.tokens);
+		applyStyleTokens(activeDocument.documentElement, this.settings.tokens);
 	}
 
 	private rebuildEditorExtensions() {
@@ -121,6 +121,6 @@ export default class Fancify extends Plugin {
 
 	onunload() {
 		clearTagPrefixLookup();
-		clearStyleTokens(document.documentElement);
+		clearStyleTokens(activeDocument.documentElement);
 	}
 }
