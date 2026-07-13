@@ -32,12 +32,7 @@ import {
 	isStandaloneFancifyTagLine,
 	isThematicBreakLine,
 } from "../paragraph-ranges";
-import type {
-	InvalidTag,
-	ScanRange,
-	StyledRange,
-	TagPair,
-} from "./types";
+import type { InvalidTag, ScanRange, StyledRange, TagPair } from "./types";
 
 const viewportBuffer = 2000;
 
@@ -48,7 +43,7 @@ interface VerticalLineOverlayRange {
 	readonly cssClass: string;
 }
 
-export function createFancifyViewPlugin(): Extension {
+export function createFancifyViewPlugin(): Extension[] {
 	const plugin = ViewPlugin.fromClass(
 		class {
 			private decorationSet: DecorationSet = Decoration.none;
@@ -68,20 +63,26 @@ export function createFancifyViewPlugin(): Extension {
 			};
 
 			constructor(private readonly view: EditorView) {
-				this.verticalLineOverlayLayer = view.dom.ownerDocument.createElement("div");
+				this.verticalLineOverlayLayer =
+					view.dom.ownerDocument.createElement("div");
 				this.verticalLineOverlayLayer.className =
 					"fancify-line-vertical-overlay-layer";
 				this.view.dom.appendChild(this.verticalLineOverlayLayer);
-				this.view.scrollDOM.addEventListener("scroll", this.handleScroll, {
-					passive: true,
-				});
+				this.view.scrollDOM.addEventListener(
+					"scroll",
+					this.handleScroll,
+					{
+						passive: true,
+					},
+				);
 				this.rebuildDocumentBlockExclusions();
 				this.buildDecorations(true);
 			}
 
 			update(update: ViewUpdate) {
 				if (update.docChanged) {
-					const previousBlockExclusions = this.documentBlockExclusions;
+					const previousBlockExclusions =
+						this.documentBlockExclusions;
 					const documentBlockExclusions = getDocumentBlockExclusions(
 						update.state.doc,
 					);
@@ -107,17 +108,26 @@ export function createFancifyViewPlugin(): Extension {
 			}
 
 			destroy() {
-				this.view.scrollDOM.removeEventListener("scroll", this.handleScroll);
+				this.view.scrollDOM.removeEventListener(
+					"scroll",
+					this.handleScroll,
+				);
 				if (this.overlayUpdateFrame !== null) {
-					getViewWindow(this.view).cancelAnimationFrame(this.overlayUpdateFrame);
+					getViewWindow(this.view).cancelAnimationFrame(
+						this.overlayUpdateFrame,
+					);
 					this.overlayUpdateFrame = null;
 				}
 				if (this.tagCleanupTimeout !== null) {
-					getViewWindow(this.view).clearTimeout(this.tagCleanupTimeout);
+					getViewWindow(this.view).clearTimeout(
+						this.tagCleanupTimeout,
+					);
 					this.tagCleanupTimeout = null;
 				}
 				if (this.tagRangeSplitTimeout !== null) {
-					getViewWindow(this.view).clearTimeout(this.tagRangeSplitTimeout);
+					getViewWindow(this.view).clearTimeout(
+						this.tagRangeSplitTimeout,
+					);
 					this.tagRangeSplitTimeout = null;
 				}
 				this.verticalLineOverlayLayer.remove();
@@ -153,7 +163,8 @@ export function createFancifyViewPlugin(): Extension {
 				);
 
 				if (result.needsWiderScan) {
-					const bufferedRanges = this.getVisibleScanRanges(viewportBuffer);
+					const bufferedRanges =
+						this.getVisibleScanRanges(viewportBuffer);
 
 					result = this.scanEngine.build(
 						this.getTreeForRanges(bufferedRanges),
@@ -183,16 +194,16 @@ export function createFancifyViewPlugin(): Extension {
 				const cleanupResult =
 					forceFullCleanupScan && !usedFullScan
 						? this.scanEngine.build(
-								this.getTreeForRanges([{ from: 0, to: doc.length }]),
+								this.getTreeForRanges([
+									{ from: 0, to: doc.length },
+								]),
 								doc,
 								[{ from: 0, to: doc.length }],
 								this.documentBlockExclusions,
 							)
 						: result;
 
-				this.scheduleTagCleanup(
-					cleanupResult.invalidTags,
-				);
+				this.scheduleTagCleanup(cleanupResult.invalidTags);
 			}
 
 			private updateVisibleDecorations() {
@@ -208,18 +219,22 @@ export function createFancifyViewPlugin(): Extension {
 				this.scheduleVerticalLineOverlayUpdate();
 			}
 
-			private scheduleTagCleanup(
-				invalidTags: readonly InvalidTag[],
-			) {
+			private scheduleTagCleanup(invalidTags: readonly InvalidTag[]) {
 				this.tagCleanupInvalidTags = [...invalidTags];
-				if (this.tagCleanupInvalidTags.length === 0 || this.tagCleanupTimeout !== null) {
+				if (
+					this.tagCleanupInvalidTags.length === 0 ||
+					this.tagCleanupTimeout !== null
+				) {
 					return;
 				}
 
-				this.tagCleanupTimeout = getViewWindow(this.view).setTimeout(() => {
-					this.tagCleanupTimeout = null;
-					this.removeInvalidTags();
-				}, 0);
+				this.tagCleanupTimeout = getViewWindow(this.view).setTimeout(
+					() => {
+						this.tagCleanupTimeout = null;
+						this.removeInvalidTags();
+					},
+					0,
+				);
 			}
 
 			private removeInvalidTags() {
@@ -248,10 +263,13 @@ export function createFancifyViewPlugin(): Extension {
 					return;
 				}
 
-				this.tagRangeSplitTimeout = getViewWindow(this.view).setTimeout(() => {
-					this.tagRangeSplitTimeout = null;
-					this.splitTagRangesAroundExclusions();
-				}, 0);
+				this.tagRangeSplitTimeout = getViewWindow(this.view).setTimeout(
+					() => {
+						this.tagRangeSplitTimeout = null;
+						this.splitTagRangesAroundExclusions();
+					},
+					0,
+				);
 			}
 
 			private splitTagRangesAroundExclusions() {
@@ -286,7 +304,9 @@ export function createFancifyViewPlugin(): Extension {
 					return;
 				}
 
-				this.overlayUpdateFrame = getViewWindow(this.view).requestAnimationFrame(() => {
+				this.overlayUpdateFrame = getViewWindow(
+					this.view,
+				).requestAnimationFrame(() => {
 					this.overlayUpdateFrame = null;
 					this.renderVerticalLineOverlays();
 				});
@@ -307,12 +327,17 @@ export function createFancifyViewPlugin(): Extension {
 				}
 
 				const editorRect = this.view.dom.getBoundingClientRect();
-				const contentRect = this.view.contentDOM.getBoundingClientRect();
+				const contentRect =
+					this.view.contentDOM.getBoundingClientRect();
 				const left = contentRect.left - editorRect.left;
 
 				for (const overlayRange of overlayRanges) {
-					const fromBlock = this.view.lineBlockAt(overlayRange.fromLineFrom);
-					const toBlock = this.view.lineBlockAt(overlayRange.toLineFrom);
+					const fromBlock = this.view.lineBlockAt(
+						overlayRange.fromLineFrom,
+					);
+					const toBlock = this.view.lineBlockAt(
+						overlayRange.toLineFrom,
+					);
 					const patternBlock = this.view.lineBlockAt(
 						overlayRange.patternFromLineFrom,
 					);
@@ -329,13 +354,21 @@ export function createFancifyViewPlugin(): Extension {
 						patternBlock.top * this.view.scaleY -
 						editorRect.top;
 					const height = bottom - top;
-					if (!Number.isFinite(top) || !Number.isFinite(height) || height <= 0) {
+					if (
+						!Number.isFinite(top) ||
+						!Number.isFinite(height) ||
+						height <= 0
+					) {
 						continue;
 					}
 
-					const lineEl = this.view.dom.ownerDocument.createElement("div");
+					const lineEl =
+						this.view.dom.ownerDocument.createElement("div");
 					lineEl.className = `${overlayRange.cssClass} fancify-line-vertical-overlay`;
-					lineEl.style.setProperty("--fancify-line-overlay-left", `${left}px`);
+					lineEl.style.setProperty(
+						"--fancify-line-overlay-left",
+						`${left}px`,
+					);
 					lineEl.style.setProperty(
 						"--fancify-line-overlay-pattern-offset-y",
 						formatOverlayPixelValue(patternTop - top),
@@ -386,11 +419,13 @@ export function createFancifyViewPlugin(): Extension {
 			keymap.of([
 				{
 					key: "Backspace",
-					run: (view) => view.plugin(plugin)?.handleDeleteKey(-1) ?? false,
+					run: (view) =>
+						view.plugin(plugin)?.handleDeleteKey(-1) ?? false,
 				},
 				{
 					key: "Delete",
-					run: (view) => view.plugin(plugin)?.handleDeleteKey(1) ?? false,
+					run: (view) =>
+						view.plugin(plugin)?.handleDeleteKey(1) ?? false,
 				},
 			]),
 		),
@@ -411,7 +446,9 @@ function getVerticalLineOverlayRanges(
 
 		for (const visibleNode of intersectRanges([node], visibleRanges)) {
 			const fromLine = doc.lineAt(visibleNode.from);
-			const toLine = doc.lineAt(Math.max(visibleNode.from, visibleNode.to - 1));
+			const toLine = doc.lineAt(
+				Math.max(visibleNode.from, visibleNode.to - 1),
+			);
 			let activeRange: VerticalLineOverlayRange | null = null;
 
 			for (
@@ -555,7 +592,10 @@ function mapRangesThroughChanges(
 	const docLength = update.state.doc.length;
 
 	return ranges.flatMap((range) => {
-		const from = clampOffset(update.changes.mapPos(range.from, 1), docLength);
+		const from = clampOffset(
+			update.changes.mapPos(range.from, 1),
+			docLength,
+		);
 		const to = clampOffset(update.changes.mapPos(range.to, -1), docLength);
 
 		return from < to ? [{ from, to }] : [];

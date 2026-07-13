@@ -17,10 +17,7 @@ import {
 	rangesOverlap,
 	subtractRanges,
 } from "../editor/decorations/scan-range-utils";
-import type {
-	ScanRange,
-	StyledRange,
-} from "../editor/decorations/types";
+import type { ScanRange, StyledRange } from "../editor/decorations/types";
 
 interface TextNodeRange extends ScanRange {
 	readonly node: Text;
@@ -73,6 +70,7 @@ export function registerFancifyMarkdownPostProcessor(plugin: Plugin): void {
 export function rerenderMarkdownPreviews(plugin: Plugin): void {
 	for (const leaf of plugin.app.workspace.getLeavesOfType("markdown")) {
 		const view = leaf.view;
+
 		if (!(view instanceof MarkdownView) || view.getMode() !== "preview") {
 			continue;
 		}
@@ -163,7 +161,9 @@ function isIgnoredTextNode(node: Text, root: HTMLElement): boolean {
 	}
 
 	const ignoredEl = parentEl.closest(ignoredTextSelector);
-	return ignoredEl !== null && (ignoredEl === root || root.contains(ignoredEl));
+	return (
+		ignoredEl !== null && (ignoredEl === root || root.contains(ignoredEl))
+	);
 }
 
 function applyBlockStyles(
@@ -211,7 +211,10 @@ function applyBlockStyles(
 				continue;
 			}
 
-			const classNames = getOrCreateClassSet(classNamesByElement, blockEl);
+			const classNames = getOrCreateClassSet(
+				classNamesByElement,
+				blockEl,
+			);
 			addCssClassNames(classNames, range.cssClass);
 			if (isListElement(blockEl)) {
 				classNames.add(blockListClass);
@@ -328,9 +331,7 @@ function replaceInlineTextNodes(
 		.filter((range) => range.styleType === "inline")
 		.sort(compareRanges);
 	const lineRanges = styledRanges
-		.filter((range) =>
-			isHorizontalLineStyleType(range.styleType),
-		)
+		.filter((range) => isHorizontalLineStyleType(range.styleType))
 		.sort(compareRanges);
 	let inlineRangeStartIndex = 0;
 	let lineRangeStartIndex = 0;
@@ -420,7 +421,11 @@ function replaceTextNode(
 	for (let index = 0; index < boundaries.length - 1; index++) {
 		const localFrom = boundaries[index];
 		const localTo = boundaries[index + 1];
-		if (localFrom === undefined || localTo === undefined || localFrom >= localTo) {
+		if (
+			localFrom === undefined ||
+			localTo === undefined ||
+			localFrom >= localTo
+		) {
 			continue;
 		}
 
@@ -434,7 +439,10 @@ function replaceTextNode(
 		);
 		if (lineRange) {
 			fragment.appendChild(
-				createLineElement(textNode.node.ownerDocument, lineRange.cssClass),
+				createLineElement(
+					textNode.node.ownerDocument,
+					lineRange.cssClass,
+				),
 			);
 			didChange = true;
 			continue;
@@ -447,7 +455,9 @@ function replaceTextNode(
 
 		const classNames = getInlineClassNames(segment, inlineRanges);
 		if (classNames.length === 0) {
-			fragment.appendChild(textNode.node.ownerDocument.createTextNode(text));
+			fragment.appendChild(
+				textNode.node.ownerDocument.createTextNode(text),
+			);
 			continue;
 		}
 

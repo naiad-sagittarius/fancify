@@ -1,4 +1,4 @@
-import { ButtonComponent } from "obsidian";
+import { ButtonComponent, activeDocument } from "obsidian";
 import { showNotice } from "../../../commands/notices";
 import type { SettingsTabRenderContext } from "../types";
 
@@ -26,7 +26,9 @@ function createActionButton(
 	label: string,
 	onClick: () => void | Promise<void>,
 ): void {
-	new ButtonComponent(container).setButtonText(label).onClick(onClick);
+	new ButtonComponent(container).setButtonText(label).onClick(() => {
+		void onClick();
+	});
 }
 
 function openImportPicker(tab: SettingsTabRenderContext): void {
@@ -36,18 +38,20 @@ function openImportPicker(tab: SettingsTabRenderContext): void {
 
 	inputEl.addEventListener(
 		"change",
-		async () => {
-			const file = inputEl.files?.[0];
-			if (!file) {
-				return;
-			}
+		() => {
+			void (async () => {
+				const file = inputEl.files?.[0];
+				if (!file) {
+					return;
+				}
 
-			try {
-				await tab.controller.importExportText(await file.text());
-			} catch (error) {
-				console.error("Failed to import Fancify export.", error);
-				showNotice("Failed to import Fancify export");
-			}
+				try {
+					await tab.controller.importExportText(await file.text());
+				} catch (error) {
+					console.error("Failed to import Fancify export.", error);
+					showNotice("Failed to import Fancify export");
+				}
+			})();
 		},
 		{ once: true },
 	);

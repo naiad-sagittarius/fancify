@@ -1,4 +1,4 @@
-import { TextComponent } from "obsidian";
+import { TextComponent, activeDocument } from "obsidian";
 import {
 	getStyleProperty,
 	getStylePropertyLabel,

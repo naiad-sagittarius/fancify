@@ -1,3 +1,5 @@
+import { activeDocument } from "obsidian";
+
 export type ColorOutputFormat = "hex" | "rgb";
 
 interface RgbColor {
@@ -695,7 +697,7 @@ export class CustomColorPicker {
 		this.popoverEl
 			?.querySelectorAll(".fancify-custom-color-format-button")
 			.forEach((buttonEl) => {
-				if (!(buttonEl instanceof HTMLButtonElement)) {
+				if (!buttonEl.instanceOf(HTMLButtonElement)) {
 					return;
 				}
 

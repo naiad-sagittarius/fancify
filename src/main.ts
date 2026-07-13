@@ -1,4 +1,4 @@
-import { Plugin } from "obsidian";
+import { Plugin, activeDocument } from "obsidian";
 import type { Extension } from "@codemirror/state";
 
 import { createFancifyViewPlugin } from "./editor/decorations/view-plugin";
@@ -106,7 +106,7 @@ export default class Fancify extends Plugin {
 		this.editorExtensions.splice(
 			0,
 			this.editorExtensions.length,
-			createFancifyViewPlugin(),
+			...createFancifyViewPlugin(),
 		);
 	}
 

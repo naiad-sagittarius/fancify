@@ -1,3 +1,4 @@
+import { activeDocument } from "obsidian";
 import {
 	createValidationErrorEl,
 	showValidationError,

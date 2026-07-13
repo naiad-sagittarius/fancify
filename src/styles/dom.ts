@@ -1,3 +1,4 @@
+import { activeDocument } from "obsidian";
 import type { Variant } from "../tools/types";
 import { getCssStyleValue, getNumberStyleValue } from "../validation";
 import {

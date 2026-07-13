@@ -1,4 +1,4 @@
-import { App, PluginSettingTab } from "obsidian";
+import { App, PluginSettingTab, activeDocument } from "obsidian";
 import Fancify from "../../main";
 import {
 	createSettingsController,
@@ -178,8 +178,9 @@ export class FancifySettingTab
 			return true;
 		}
 
-		const targetEl =
-			target instanceof Element ? target : target.parentElement;
+		const targetEl = target.instanceOf(Element)
+			? target
+			: target.parentElement;
 		if (!targetEl) {
 			return false;
 		}

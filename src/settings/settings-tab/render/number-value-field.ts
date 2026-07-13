@@ -16,10 +16,7 @@ export function renderNumberValueField(params: {
 	range: StyleNumberRange;
 }): void {
 	const currentValue = params.draft.values[params.property] ?? "";
-	const currentNumber = getNumberStyleValue(
-		params.property,
-		currentValue,
-	);
+	const currentNumber = getNumberStyleValue(params.property, currentValue);
 	const controlEl = params.container.createDiv("fancify-number-input");
 	const sliderStep = params.range.sliderStep ?? 2;
 	const inputStep = params.range.step ?? 1;
@@ -34,14 +31,9 @@ export function renderNumberValueField(params: {
 	const sliderComponent = new SliderComponent(sliderContainerEl);
 	renderSliderMarks(sliderContainerEl);
 	sliderComponent
-		.setLimits(
-			params.range.min,
-			params.range.max,
-			sliderStep,
-		)
+		.setLimits(params.range.min, params.range.max, sliderStep)
 		.setInstant(true)
-		.setValue(initialNumber)
-		.setDynamicTooltip();
+		.setValue(initialNumber);
 	const incrementButtonEl = createSliderButton(
 		sliderGroupEl,
 		"Increase value",
@@ -84,9 +76,7 @@ export function renderNumberValueField(params: {
 			return clampNumber(value);
 		}
 
-		const stepOffset = Math.round(
-			(value - params.range.min) / sliderStep,
-		);
+		const stepOffset = Math.round((value - params.range.min) / sliderStep);
 		const snappedValue = params.range.min + stepOffset * sliderStep;
 		const clampedValue = clampNumber(snappedValue);
 
