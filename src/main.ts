@@ -1,4 +1,4 @@
-import { Plugin, activeDocument } from "obsidian";
+import { Plugin } from "obsidian";
 import type { Extension } from "@codemirror/state";
 
 import { createFancifyViewPlugin } from "./editor/decorations/view-plugin";
@@ -26,6 +26,8 @@ import {
 	type RuntimeSyncOptions,
 	type SettingsChange,
 } from "./runtime-sync";
+
+const activeDocument = typeof document !== "undefined" ? document : (globalThis as any).activeDocument;
 
 export type { SettingsChange } from "./runtime-sync";
 
