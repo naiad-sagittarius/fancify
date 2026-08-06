@@ -1,4 +1,3 @@
-import { activeDocument } from "obsidian";
 import type { Variant } from "../tools/types";
 import { getCssStyleValue, getNumberStyleValue } from "../validation";
 import {
@@ -11,6 +10,7 @@ import { isLineStyleType, type StyleToken, type StyleType } from "./types";
 import { buildStyleTokenClass, buildStyleTokenVariableName } from "./tokens";
 import { isStyleTokenVariableName } from "./helpers";
 
+const activeDocument = typeof document !== "undefined" ? document : (globalThis as any).activeDocument;
 const tokenStyleElementId = "fancify-token-rules";
 
 function getDocument(target: HTMLElement): Document {
