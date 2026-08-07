@@ -1,4 +1,4 @@
-import { App, PluginSettingTab } from "obsidian";
+import { App, PluginSettingTab, type SettingDefinitionItem } from "obsidian";
 import Fancify from "../../main";
 import {
 	createSettingsController,
@@ -29,7 +29,6 @@ export class FancifySettingTab
 		this.plugin = plugin;
 		this.controller = createSettingsController(plugin, this.state, () => {
 			const self = this as Record<string, unknown>;
-
 			if (typeof self.update === "function") {
 				(self.update as () => void)();
 			} else {
@@ -46,6 +45,15 @@ export class FancifySettingTab
 		super.hide();
 	}
 
+	getSettingDefinitions(): SettingDefinitionItem<string>[] {
+		const customPage = {
+			type: "page",
+			id: "fancify-main-page",
+			title: "Fancify Settings",
+			render: () => this.display(),
+		};
+		return [customPage as unknown as SettingDefinitionItem<string>];
+	}
 	display(): void {
 		const { containerEl } = this;
 		const { tools } = this.plugin.settings;

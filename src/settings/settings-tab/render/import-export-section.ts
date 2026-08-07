@@ -18,7 +18,7 @@ function downloadTextFile(fileName: string, text: string): void {
 	linkEl.click();
 	linkEl.remove();
 
-	activeWindow.setTimeout(() => URL.revokeObjectURL(url), 0);
+	window.setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 function createActionButton(
