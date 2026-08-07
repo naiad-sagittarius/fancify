@@ -37,10 +37,11 @@ export function getStyleTypeLabel(styleType: StyleType): string {
 }
 
 export function getToolTypeLabel(styleType: StyleType): string {
-	return isLineStyleType(styleType) ? "element" : getStyleTypeLabel(styleType);
+	return isLineStyleType(styleType)
+		? "element"
+		: getStyleTypeLabel(styleType);
 }
 
-// css property that can be chosen in the UI
 export interface Property {
 	property: string;
 	label?: string;

@@ -227,9 +227,7 @@ function trySetPointerCapture(
 
 	try {
 		element.setPointerCapture(pointerId);
-	} catch {
-		// Some mobile webviews reject capture after touch focus changes.
-	}
+	} catch {}
 }
 
 export class CustomColorPicker {
