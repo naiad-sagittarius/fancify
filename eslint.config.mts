@@ -15,6 +15,7 @@ export default defineConfig([
 				...globals.browser,
 				activeDocument: "readonly",
 				activeWindow: "readonly",
+				process: "readonly",
 			},
 			parserOptions: {
 				parser: tseslint.parser,
