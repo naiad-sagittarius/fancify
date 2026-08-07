@@ -27,7 +27,6 @@ export class FancifySettingTab
 	constructor(app: App, plugin: Fancify) {
 		super(app, plugin);
 		this.plugin = plugin;
-		// eslint-disable-next-line @typescript-eslint/no-deprecated
 		this.controller = createSettingsController(plugin, this.state, () =>
 			this.display(),
 		);
@@ -41,7 +40,6 @@ export class FancifySettingTab
 		super.hide();
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-deprecated
 	display(): void {
 		const { containerEl } = this;
 		const { tools } = this.plugin.settings;

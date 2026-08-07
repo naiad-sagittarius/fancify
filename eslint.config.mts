@@ -9,6 +9,7 @@ const obsidianConfigs = (obsidianmd.configs?.recommended ??
 
 export default defineConfig([
 	...obsidianConfigs,
+
 	{
 		languageOptions: {
 			globals: {
@@ -25,6 +26,13 @@ export default defineConfig([
 				tsconfigRootDir: new URL(".", import.meta.url).pathname,
 				extraFileExtensions: [".json"],
 			},
+		},
+	},
+
+	{
+		files: ["**/settings-tab.ts"],
+		rules: {
+			"@typescript-eslint/no-deprecated": "off",
 		},
 	},
 
