@@ -1,34 +1,31 @@
-import tseslint from 'typescript-eslint';
+import { defineConfig, globalIgnores } from "eslint/config";
+import type { Linter } from "eslint";
+import tseslint from "typescript-eslint";
 import obsidianmd from "eslint-plugin-obsidianmd";
 import globals from "globals";
-import { globalIgnores } from "eslint/config";
 
-export default tseslint.config(
+const obsidianConfigs = (obsidianmd.configs?.recommended ??
+	[]) as Linter.Config[];
+
+export default defineConfig([
+	...obsidianConfigs,
 	{
 		languageOptions: {
 			globals: {
 				...globals.browser,
+				activeDocument: "readonly",
+				activeWindow: "readonly",
 			},
 			parserOptions: {
+				parser: tseslint.parser,
 				projectService: {
-					allowDefaultProject: [
-						'eslint.config.js',
-						'manifest.json'
-					]
+					allowDefaultProject: ["eslint.config.js", "manifest.json"],
 				},
-				tsconfigRootDir: import.meta.dirname,
-				extraFileExtensions: ['.json']
+				tsconfigRootDir: new URL(".", import.meta.url).pathname,
+				extraFileExtensions: [".json"],
 			},
 		},
 	},
-	...obsidianmd.configs.recommended,
-	globalIgnores([
-		"node_modules",
-		"dist",
-		"esbuild.config.mjs",
-		"eslint.config.js",
-		"version-bump.mjs",
-		"versions.json",
-		"main.js",
-	]),
-);
+
+	globalIgnores(["node_modules", "dist", "*.js", "*.json"]),
+]);
