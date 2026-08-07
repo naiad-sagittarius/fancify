@@ -33,6 +33,9 @@ export default defineConfig([
 		files: ["**/settings-tab.ts"],
 		rules: {
 			"@typescript-eslint/no-deprecated": "off",
+			"obsidianmd/prefer-declarative-settings": "off",
+			"obsidianmd/prefer-settings-update": "off",
+			"obsidianmd/no-important": "off",
 		},
 	},
 

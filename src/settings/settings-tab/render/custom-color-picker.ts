@@ -34,9 +34,12 @@ function getColorParserContext(): CanvasRenderingContext2D | null {
 		return colorParserContext;
 	}
 
-	const canvas = activeDocument.createElement("canvas");
-	canvas.width = 1;
-	canvas.height = 1;
+	const canvas = activeDocument.createEl("canvas", {
+		attr: {
+			width: 1,
+			height: 1,
+		},
+	});
 	colorParserContext = canvas.getContext("2d");
 	return colorParserContext;
 }

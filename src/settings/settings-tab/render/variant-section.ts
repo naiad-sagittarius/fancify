@@ -13,14 +13,8 @@ import type { DraftVariant } from "../drafts";
 import type { SettingsTabRenderContext } from "../types";
 import { renderColorValueField } from "./color-value-field";
 import { renderIconButton, renderTextField } from "./fields";
-import {
-	type ListDragState,
-	renderListItemActions,
-} from "./list-item-actions";
-import {
-	renderToolIconSlot,
-	updateToolIconSlot,
-} from "./tool-icon";
+import { type ListDragState, renderListItemActions } from "./list-item-actions";
+import { renderToolIconSlot, updateToolIconSlot } from "./tool-icon";
 import { renderNumberValueField } from "./number-value-field";
 import { renderSelectValueField } from "./select-value-field";
 
@@ -79,6 +73,15 @@ export function renderVariantListItem(
 			await tab.controller.moveVariant(draggedVariant, targetIndex);
 		},
 	});
+	if (actionsEl.children.length === 1) {
+		const singleChild = actionsEl.firstElementChild;
+		if (
+			singleChild &&
+			singleChild.matches("button.fancify-icon-button.is-danger")
+		) {
+			actionsEl.addClass("has-single-danger-button");
+		}
+	}
 }
 
 export function renderVariantDetailPage(
@@ -199,7 +202,8 @@ function renderVariantValueRow(
 			property,
 			options: definition.options,
 			defaultValue: getStylePropertyDefaultValue(property),
-			getOptionLabel: (value) => getStylePropertyOptionLabel(property, value),
+			getOptionLabel: (value) =>
+				getStylePropertyOptionLabel(property, value),
 		});
 		return;
 	}

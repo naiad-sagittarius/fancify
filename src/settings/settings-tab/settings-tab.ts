@@ -27,9 +27,15 @@ export class FancifySettingTab
 	constructor(app: App, plugin: Fancify) {
 		super(app, plugin);
 		this.plugin = plugin;
-		this.controller = createSettingsController(plugin, this.state, () =>
-			this.display(),
-		);
+		this.controller = createSettingsController(plugin, this.state, () => {
+			const self = this as Record<string, unknown>;
+
+			if (typeof self.update === "function") {
+				(self.update as () => void)();
+			} else {
+				this.display();
+			}
+		});
 	}
 
 	hide(): void {

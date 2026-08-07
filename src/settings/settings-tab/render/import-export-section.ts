@@ -9,7 +9,7 @@ function getDateStamp(): string {
 function downloadTextFile(fileName: string, text: string): void {
 	const blob = new Blob([text], { type: "application/json" });
 	const url = URL.createObjectURL(blob);
-	const linkEl = activeDocument.createElement("a");
+	const linkEl = activeDocument.createEl("a");
 
 	linkEl.href = url;
 	linkEl.download = fileName;
@@ -18,7 +18,7 @@ function downloadTextFile(fileName: string, text: string): void {
 	linkEl.click();
 	linkEl.remove();
 
-	setTimeout(() => URL.revokeObjectURL(url), 0);
+	activeWindow.setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 function createActionButton(
@@ -32,9 +32,12 @@ function createActionButton(
 }
 
 function openImportPicker(tab: SettingsTabRenderContext): void {
-	const inputEl = activeDocument.createElement("input");
-	inputEl.type = "file";
-	inputEl.accept = ".json,application/json";
+	const inputEl = activeDocument.createEl("input", {
+		attr: {
+			type: "file",
+			accept: ".json,application/json",
+		},
+	});
 
 	inputEl.addEventListener(
 		"change",

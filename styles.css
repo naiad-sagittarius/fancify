@@ -922,15 +922,15 @@ body.is-phone .fancify-tool-type-modal-container.fancify-tool-type-modal-no-clos
 	padding: 0;
 }
 
-.fancify-settings .fancify-row-actions:has(> button.fancify-icon-button.is-danger:only-child) {
+.fancify-settings .fancify-row-actions.has-single-danger-button {
 	padding: 0;
 	border-radius: 0;
 	background: transparent;
 	overflow: visible;
 }
 
-.fancify-settings .fancify-row-actions:has(> button.fancify-icon-button.is-danger:only-child):hover,
-.fancify-settings .fancify-row-actions:has(> button.fancify-icon-button.is-danger:only-child):focus-within {
+.fancify-settings .fancify-row-actions.has-single-danger-button:hover,
+.fancify-settings .fancify-row-actions.has-single-danger-button:focus-within {
 	background: transparent;
 }
 

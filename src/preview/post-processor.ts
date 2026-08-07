@@ -415,7 +415,7 @@ function replaceTextNode(
 	}
 
 	const boundaries = collectBoundaries(textNode, relevantRanges);
-	const fragment = textNode.node.ownerDocument.createDocumentFragment();
+	const fragment = window.createFragment();
 	let didChange = false;
 
 	for (let index = 0; index < boundaries.length - 1; index++) {
@@ -461,10 +461,10 @@ function replaceTextNode(
 			continue;
 		}
 
-		const span = textNode.node.ownerDocument.createElement("span");
-		span.classList.add(...classNames);
-		span.appendChild(textNode.node.ownerDocument.createTextNode(text));
-		fragment.appendChild(span);
+		fragment.createEl("span", {
+			cls: classNames,
+			text: text,
+		});
 		didChange = true;
 	}
 

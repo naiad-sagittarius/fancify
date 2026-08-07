@@ -9,19 +9,10 @@ import {
 import type { Tool, Variant } from "../../../tools/types";
 import { ToolIconPickerModal } from "../tool-icon-picker";
 import type { SettingsTabRenderContext } from "../types";
-import {
-	renderIconButton,
-	renderTextField,
-} from "./fields";
-import {
-	renderToolIconSlot,
-	updateToolIconSlot,
-} from "./tool-icon";
+import { renderIconButton, renderTextField } from "./fields";
+import { renderToolIconSlot, updateToolIconSlot } from "./tool-icon";
 import { renderListItemContent } from "./list-item-content";
-import {
-	type ListDragState,
-	renderListItemActions,
-} from "./list-item-actions";
+import { type ListDragState, renderListItemActions } from "./list-item-actions";
 import { renderPropertyEditor } from "./property-editor";
 import { renderSectionListPanel } from "./section-list";
 import { renderVariantListItem } from "./variant-section";
@@ -56,11 +47,7 @@ export function renderToolListItem(
 		iconFrameEl.addClass("is-empty");
 	}
 
-	renderListItemContent(
-		mainEl,
-		tool.name,
-		"Untitled tool",
-	);
+	renderListItemContent(mainEl, tool.name, "Untitled tool");
 
 	const actionsEl = rowEl.createDiv("fancify-row-actions");
 	renderListItemActions({
@@ -82,6 +69,15 @@ export function renderToolListItem(
 			await tab.controller.moveTool(draggedTool, targetIndex);
 		},
 	});
+	if (actionsEl.children.length === 1) {
+		const singleChild = actionsEl.firstElementChild;
+		if (
+			singleChild &&
+			singleChild.matches("button.fancify-icon-button.is-danger")
+		) {
+			actionsEl.addClass("has-single-danger-button");
+		}
+	}
 }
 
 export function renderToolDetailPage(
@@ -189,10 +185,7 @@ function renderToolElementTypePicker(
 				role: "radio",
 				"aria-checked": String(isSelected),
 			},
-			cls: [
-				"fancify-tool-element-option",
-				isSelected ? "is-active" : "",
-			],
+			cls: ["fancify-tool-element-option", isSelected ? "is-active" : ""],
 			text: label,
 		});
 		buttonEl.addEventListener("click", () => {

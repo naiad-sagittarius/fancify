@@ -63,11 +63,9 @@ export function createFancifyViewPlugin(): Extension[] {
 			};
 
 			constructor(private readonly view: EditorView) {
-				this.verticalLineOverlayLayer =
-					view.dom.ownerDocument.createElement("div");
-				this.verticalLineOverlayLayer.className =
-					"fancify-line-vertical-overlay-layer";
-				this.view.dom.appendChild(this.verticalLineOverlayLayer);
+				this.verticalLineOverlayLayer = this.view.dom.createDiv({
+					cls: "fancify-line-vertical-overlay-layer",
+				});
 				this.view.scrollDOM.addEventListener(
 					"scroll",
 					this.handleScroll,
@@ -362,20 +360,20 @@ export function createFancifyViewPlugin(): Extension[] {
 						continue;
 					}
 
-					const lineEl =
-						this.view.dom.ownerDocument.createElement("div");
-					lineEl.className = `${overlayRange.cssClass} fancify-line-vertical-overlay`;
-					lineEl.style.setProperty(
-						"--fancify-line-overlay-left",
-						`${left}px`,
-					);
-					lineEl.style.setProperty(
-						"--fancify-line-overlay-pattern-offset-y",
-						formatOverlayPixelValue(patternTop - top),
-					);
-					lineEl.style.top = `${top}px`;
-					lineEl.style.height = `${height}px`;
-					this.verticalLineOverlayLayer.appendChild(lineEl);
+					const lineEl = this.verticalLineOverlayLayer.createDiv({
+						cls: `${overlayRange.cssClass} fancify-line-vertical-overlay`,
+					});
+
+					lineEl.setCssProps({
+						"--fancify-line-overlay-left": `${left}px`,
+						"--fancify-line-overlay-pattern-offset-y":
+							formatOverlayPixelValue(patternTop - top),
+					});
+
+					lineEl.setCssStyles({
+						top: `${top}px`,
+						height: `${height}px`,
+					});
 				}
 			}
 

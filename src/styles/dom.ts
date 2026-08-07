@@ -36,11 +36,10 @@ export function applyStyleTokens(
 	}
 
 	const existing = doc.getElementById(tokenStyleElementId);
+	/* eslint-disable obsidianmd/no-forbidden-elements */
 	const styleEl =
-		existing instanceof HTMLStyleElement
-			? existing
-			: doc.createElement("style");
-
+		existing instanceof HTMLStyleElement ? existing : doc.createEl("style");
+	/* eslint-enable obsidianmd/no-forbidden-elements */
 	if (!(existing instanceof HTMLStyleElement)) {
 		styleEl.id = tokenStyleElementId;
 		doc.head.appendChild(styleEl);
