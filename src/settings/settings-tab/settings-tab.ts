@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, activeDocument } from "obsidian";
+import { App, PluginSettingTab } from "obsidian";
 import Fancify from "../../main";
 import {
 	createSettingsController,

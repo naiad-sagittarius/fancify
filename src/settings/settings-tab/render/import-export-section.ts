@@ -1,4 +1,4 @@
-import { ButtonComponent, activeDocument } from "obsidian";
+import { ButtonComponent } from "obsidian";
 import { showNotice } from "../../../commands/notices";
 import type { SettingsTabRenderContext } from "../types";
 

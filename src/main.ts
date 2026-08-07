@@ -27,8 +27,6 @@ import {
 	type SettingsChange,
 } from "./runtime-sync";
 
-const activeDocument = typeof document !== "undefined" ? document : (globalThis as any).activeDocument;
-
 export type { SettingsChange } from "./runtime-sync";
 
 export default class Fancify extends Plugin {

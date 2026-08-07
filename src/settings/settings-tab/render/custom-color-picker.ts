@@ -1,5 +1,3 @@
-import { activeDocument } from "obsidian";
-
 export type ColorOutputFormat = "hex" | "rgb";
 
 interface RgbColor {
