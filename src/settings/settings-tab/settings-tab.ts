@@ -1,4 +1,9 @@
-import { App, PluginSettingTab, type SettingDefinitionItem } from "obsidian";
+import {
+	App,
+	PluginSettingTab,
+	SettingPage,
+	type SettingDefinitionItem,
+} from "obsidian";
 import Fancify from "../../main";
 import {
 	createSettingsController,
@@ -11,49 +16,79 @@ import { renderVariantDetailPage } from "./render/variant-section";
 import { createSettingsViewState, type SettingsViewState } from "./view-state";
 import type { SettingsTabRenderContext } from "./types";
 
-export class FancifySettingTab
-	extends PluginSettingTab
-	implements SettingsTabRenderContext
-{
+export class FancifySettingTab extends PluginSettingTab {
 	plugin: Fancify;
 	readonly state: SettingsViewState = createSettingsViewState();
-	activeSuggests: SettingsTabRenderContext["activeSuggests"] = [];
 	readonly controller: SettingsTabController;
-	private settingsChromeSurfaceEl: HTMLElement | null = null;
-	private settingsTitleVersionEl: HTMLElement | null = null;
-	private outsideAutosaveAbortController: AbortController | null = null;
-	private pendingCommit: Promise<void> | null = null;
+	private activePage: FancifyMainPage | null = null;
 
 	constructor(app: App, plugin: Fancify) {
 		super(app, plugin);
 		this.plugin = plugin;
+
 		this.controller = createSettingsController(plugin, this.state, () => {
-			const self = this as Record<string, unknown>;
-			if (typeof self.update === "function") {
-				(self.update as () => void)();
+			if (this.activePage) {
+				this.activePage.display();
 			} else {
-				this.display();
+				this.update();
 			}
 		});
 	}
 
 	hide(): void {
-		this.unregisterOutsideAutosave();
-		this.closeActiveSuggests();
-		this.clearSettingsChrome();
-		void this.commitPendingChanges("close");
+		if (this.activePage) {
+			this.activePage.cleanup();
+		}
 		super.hide();
 	}
 
 	getSettingDefinitions(): SettingDefinitionItem<string>[] {
-		const customPage = {
-			type: "page",
-			id: "fancify-main-page",
-			title: "Fancify Settings",
-			render: () => this.display(),
-		};
-		return [customPage as unknown as SettingDefinitionItem<string>];
+		return [
+			{
+				type: "page",
+				name: "Fancify Settings",
+				page: () => {
+					this.activePage = new FancifyMainPage(
+						this.app,
+						this.plugin,
+						this.state,
+						this.controller,
+					);
+					return this.activePage;
+				},
+			},
+		];
 	}
+}
+
+export class FancifyMainPage
+	extends SettingPage
+	implements SettingsTabRenderContext
+{
+	app: App;
+	plugin: Fancify;
+	state: SettingsViewState;
+	controller: SettingsTabController;
+	activeSuggests: SettingsTabRenderContext["activeSuggests"] = [];
+
+	private settingsChromeSurfaceEl: HTMLElement | null = null;
+	private settingsTitleVersionEl: HTMLElement | null = null;
+	private outsideAutosaveAbortController: AbortController | null = null;
+	private pendingCommit: Promise<void> | null = null;
+
+	constructor(
+		app: App,
+		plugin: Fancify,
+		state: SettingsViewState,
+		controller: SettingsTabController,
+	) {
+		super();
+		this.app = app;
+		this.plugin = plugin;
+		this.state = state;
+		this.controller = controller;
+	}
+
 	display(): void {
 		const { containerEl } = this;
 		const { tools } = this.plugin.settings;
@@ -107,11 +142,17 @@ export class FancifySettingTab
 		renderMainPage(this, pageEl);
 	}
 
-	private closeActiveSuggests(): void {
+	cleanup(): void {
+		this.unregisterOutsideAutosave();
+		this.closeActiveSuggests();
+		this.clearSettingsChrome();
+		void this.commitPendingChanges("close");
+	}
+
+	closeActiveSuggests(): void {
 		for (const suggest of this.activeSuggests) {
 			suggest.close();
 		}
-
 		this.activeSuggests = [];
 	}
 
@@ -126,7 +167,6 @@ export class FancifySettingTab
 				if (this.shouldIgnoreOutsideAutosave(event.target)) {
 					return;
 				}
-
 				void this.commitPendingChanges("outside click");
 			},
 			{
