@@ -7,7 +7,8 @@ export function createLineElement(
 	cssClass: string,
 	options: LineElementOptions = {},
 ): HTMLElement {
-	const lineEl = doc.createEl("span", {
+	const targetDoc = doc || activeDocument;
+	const lineEl = targetDoc.createSpan({
 		cls: cssClass,
 	});
 

@@ -461,7 +461,7 @@ function replaceTextNode(
 			continue;
 		}
 
-		fragment.createEl("span", {
+		fragment.createSpan({
 			cls: classNames,
 			text: text,
 		});
