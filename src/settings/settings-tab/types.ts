@@ -9,5 +9,4 @@ export interface SettingsTabRenderContext {
 	state: SettingsViewState;
 	controller: SettingsTabController;
 	activeSuggests: Array<{ close(): void }>;
-	display(): void;
 }

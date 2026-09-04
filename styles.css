@@ -838,10 +838,18 @@
 	align-self: center;
 	gap: 0;
 	flex: 0 0 auto;
-	padding: 1px;
+	padding: 0;
+	border: 1px solid var(--fancify-border);
 	border-radius: 12px;
-	background: var(--fancify-border);
+	background: #ffffff;
 	overflow: hidden;
+}
+
+.fancify-settings .fancify-row-actions:hover,
+.fancify-settings .fancify-row-actions:focus-within {
+	border-color: var(--fancify-border);
+	background: #ffffff;
+	background-color: #ffffff;
 }
 
 .fancify-icon-button {
@@ -854,23 +862,28 @@
 	box-shadow: none;
 }
 
-.vertical-tab-content .fancify-settings .fancify-row-actions > button.fancify-icon-button {
+.fancify-settings.fancify-settings .fancify-section-list .fancify-row-actions > button.fancify-icon-button.fancify-icon-button {
 	position: relative;
+	appearance: none;
+	-webkit-appearance: none;
 	border: 0;
 	border-radius: 0;
-	background: var(--background-primary);
+	outline: 0;
+	background: #ffffff;
+	background-color: #ffffff;
+	background-image: none;
 	box-shadow: none;
 }
 
 .fancify-settings .fancify-row-actions > button.fancify-icon-button:not(:last-child)::after {
 	content: "";
 	position: absolute;
-	top: 6px;
+	top: 7px;
 	right: 0;
-	bottom: 6px;
+	bottom: 7px;
 	width: 1px;
 	transform: translateX(50%);
-	background: var(--fancify-row-action-divider);
+	background: #e6e6e6;
 	pointer-events: none;
 	z-index: 1;
 }
@@ -881,9 +894,16 @@
 	background: var(--fancify-hover-bg);
 }
 
-.vertical-tab-content .fancify-settings .fancify-row-actions > button.fancify-icon-button:hover,
-.vertical-tab-content .fancify-settings .fancify-row-actions > button.fancify-icon-button:focus-visible {
+.fancify-settings.fancify-settings .fancify-section-list .fancify-row-actions > button.fancify-icon-button.fancify-icon-button:hover,
+.fancify-settings.fancify-settings .fancify-section-list .fancify-row-actions > button.fancify-icon-button.fancify-icon-button:focus,
+.fancify-settings.fancify-settings .fancify-section-list .fancify-row-actions > button.fancify-icon-button.fancify-icon-button:focus-visible,
+.fancify-settings.fancify-settings .fancify-section-list .fancify-row-actions > button.fancify-icon-button.fancify-icon-button:active {
+	border: 0;
+	outline: 0;
 	background: var(--fancify-hover-bg);
+	background-color: var(--fancify-hover-bg);
+	background-image: none;
+	box-shadow: none;
 }
 
 .fancify-settings .fancify-row-actions > button.fancify-icon-button:first-child {
@@ -1246,8 +1266,6 @@ button.fancify-tool-icon-slot:focus-visible {
 	-webkit-appearance: none;
 }
 
-.fancify-row-actions:hover,
-.fancify-row-actions:focus-within,
 .fancify-property-menu-item:hover,
 .fancify-property-menu-item.is-active,
 .fancify-color-picker-trigger:hover,

@@ -1,9 +1,4 @@
-import {
-	App,
-	PluginSettingTab,
-	SettingPage,
-	type SettingDefinitionItem,
-} from "obsidian";
+import { App, PluginSettingTab } from "obsidian";
 import Fancify from "../../main";
 import {
 	createSettingsController,
@@ -16,59 +11,13 @@ import { renderVariantDetailPage } from "./render/variant-section";
 import { createSettingsViewState, type SettingsViewState } from "./view-state";
 import type { SettingsTabRenderContext } from "./types";
 
-export class FancifySettingTab extends PluginSettingTab {
+export class FancifySettingTab
+	extends PluginSettingTab
+	implements SettingsTabRenderContext
+{
 	plugin: Fancify;
 	readonly state: SettingsViewState = createSettingsViewState();
 	readonly controller: SettingsTabController;
-	private activePage: FancifyMainPage | null = null;
-
-	constructor(app: App, plugin: Fancify) {
-		super(app, plugin);
-		this.plugin = plugin;
-
-		this.controller = createSettingsController(plugin, this.state, () => {
-			if (this.activePage) {
-				this.activePage.display();
-			} else {
-				this.update();
-			}
-		});
-	}
-
-	hide(): void {
-		if (this.activePage) {
-			this.activePage.cleanup();
-		}
-		super.hide();
-	}
-
-	getSettingDefinitions(): SettingDefinitionItem<string>[] {
-		return [
-			{
-				type: "page",
-				name: "Fancify Settings",
-				page: () => {
-					this.activePage = new FancifyMainPage(
-						this.app,
-						this.plugin,
-						this.state,
-						this.controller,
-					);
-					return this.activePage;
-				},
-			},
-		];
-	}
-}
-
-export class FancifyMainPage
-	extends SettingPage
-	implements SettingsTabRenderContext
-{
-	app: App;
-	plugin: Fancify;
-	state: SettingsViewState;
-	controller: SettingsTabController;
 	activeSuggests: SettingsTabRenderContext["activeSuggests"] = [];
 
 	private settingsChromeSurfaceEl: HTMLElement | null = null;
@@ -76,22 +25,19 @@ export class FancifyMainPage
 	private outsideAutosaveAbortController: AbortController | null = null;
 	private pendingCommit: Promise<void> | null = null;
 
-	constructor(
-		app: App,
-		plugin: Fancify,
-		state: SettingsViewState,
-		controller: SettingsTabController,
-	) {
-		super();
-		this.app = app;
+	constructor(app: App, plugin: Fancify) {
+		super(app, plugin);
 		this.plugin = plugin;
-		this.state = state;
-		this.controller = controller;
+
+		this.controller = createSettingsController(plugin, this.state, () => {
+			this.update();
+		});
 	}
 
-	display(): void {
+	update(): void {
 		const { containerEl } = this;
 		const { tools } = this.plugin.settings;
+		this.settingItems = [];
 		this.closeActiveSuggests();
 		containerEl.empty();
 		containerEl.addClass("fancify-settings");
@@ -142,11 +88,16 @@ export class FancifyMainPage
 		renderMainPage(this, pageEl);
 	}
 
-	cleanup(): void {
+	display(): void {
+		this.update();
+	}
+
+	hide(): void {
 		this.unregisterOutsideAutosave();
 		this.closeActiveSuggests();
 		this.clearSettingsChrome();
 		void this.commitPendingChanges("close");
+		super.hide();
 	}
 
 	closeActiveSuggests(): void {

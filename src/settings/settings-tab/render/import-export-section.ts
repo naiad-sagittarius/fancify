@@ -6,15 +6,21 @@ function getDateStamp(): string {
 	return new Date().toISOString().slice(0, 10);
 }
 
-function downloadTextFile(fileName: string, text: string): void {
+function downloadTextFile(
+	doc: Document,
+	fileName: string,
+	text: string,
+): void {
 	const blob = new Blob([text], { type: "application/json" });
 	const url = URL.createObjectURL(blob);
-	const linkEl = activeDocument.createEl("a");
+	const linkEl = doc.createElement("a");
 
 	linkEl.href = url;
 	linkEl.download = fileName;
+	linkEl.style.display = "none";
+	linkEl.rel = "noopener";
 
-	activeDocument.body.appendChild(linkEl);
+	doc.body.appendChild(linkEl);
 	linkEl.click();
 	linkEl.remove();
 
@@ -26,18 +32,26 @@ function createActionButton(
 	label: string,
 	onClick: () => void | Promise<void>,
 ): void {
-	new ButtonComponent(container).setButtonText(label).onClick(() => {
-		void onClick();
+	new ButtonComponent(container).setButtonText(label).onClick(async () => {
+		try {
+			await onClick();
+		} catch (error) {
+			console.error(`Failed to run Fancify action "${label}".`, error);
+			showNotice(`Failed to ${label.toLowerCase()}`);
+		}
 	});
 }
 
-function openImportPicker(tab: SettingsTabRenderContext): void {
-	const inputEl = activeDocument.createEl("input", {
-		attr: {
-			type: "file",
-			accept: ".json,application/json",
-		},
-	});
+function openImportPicker(
+	tab: SettingsTabRenderContext,
+	container: HTMLElement,
+): void {
+	const doc = container.ownerDocument ?? activeDocument;
+	const inputEl = doc.createElement("input");
+
+	inputEl.type = "file";
+	inputEl.accept = ".json,application/json";
+	inputEl.style.display = "none";
 
 	inputEl.addEventListener(
 		"change",
@@ -53,12 +67,15 @@ function openImportPicker(tab: SettingsTabRenderContext): void {
 				} catch (error) {
 					console.error("Failed to import Fancify export.", error);
 					showNotice("Failed to import Fancify export");
+				} finally {
+					inputEl.remove();
 				}
 			})();
 		},
 		{ once: true },
 	);
 
+	doc.body.appendChild(inputEl);
 	inputEl.click();
 }
 
@@ -78,22 +95,15 @@ export function renderImportExportSection(
 		"fancify-import-export-actions",
 	);
 
-	createActionButton(exportActionsEl, "Export preset", async () => {
+	createActionButton(exportActionsEl, "Export", async () => {
 		const text = await tab.controller.createPresetExportText();
 		if (!text) {
 			return;
 		}
 
-		downloadTextFile(`fancify-preset-${getDateStamp()}.json`, text);
-	});
-
-	createActionButton(exportActionsEl, "Export backup", async () => {
-		const text = await tab.controller.createBackupExportText();
-		if (!text) {
-			return;
-		}
-
-		downloadTextFile(`fancify-backup-${getDateStamp()}.json`, text);
+		const fileName = `fancify-preset-${getDateStamp()}.json`;
+		downloadTextFile(container.ownerDocument ?? activeDocument, fileName, text);
+		showNotice("Fancify preset export started");
 	});
 
 	const importRowEl = panelEl.createDiv("fancify-import-export-row");
@@ -107,6 +117,6 @@ export function renderImportExportSection(
 	);
 
 	createActionButton(importActionsEl, "Import", () => {
-		openImportPicker(tab);
+		openImportPicker(tab, container);
 	});
 }

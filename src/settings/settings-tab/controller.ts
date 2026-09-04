@@ -3,7 +3,6 @@ import type Fancify from "../../main";
 import type { SettingsChange } from "../../main";
 import { showNotice } from "../../commands/notices";
 import {
-	createBackupExport,
 	createPresetExport,
 	stringifyExport,
 } from "../import-export/export";
@@ -86,7 +85,6 @@ function createControllerApi(api: {
 	moveVariant(variant: Variant, targetIndex: number): Promise<void>;
 	addToolProperty(tool: Tool, property: string): void;
 	removeToolProperty(tool: Tool, property: string): void;
-	createBackupExportText(): Promise<string | null>;
 	createPresetExportText(): Promise<string | null>;
 	importExportText(text: string): Promise<boolean>;
 }) {
@@ -836,19 +834,6 @@ export function createSettingsController(
 		refreshView();
 	}
 
-	async function createBackupExportText(): Promise<string | null> {
-		if (!(await commitCurrentPage({ refreshOnError: true }))) {
-			return null;
-		}
-
-		return stringifyExport(
-			createBackupExport(
-				plugin.settings,
-				plugin.manifest.version,
-			),
-		);
-	}
-
 	async function createPresetExportText(): Promise<string | null> {
 		if (!(await commitCurrentPage({ refreshOnError: true }))) {
 			return null;
@@ -928,7 +913,6 @@ export function createSettingsController(
 		moveVariant,
 		addToolProperty,
 		removeToolProperty,
-		createBackupExportText,
 		createPresetExportText,
 		importExportText,
 	});
